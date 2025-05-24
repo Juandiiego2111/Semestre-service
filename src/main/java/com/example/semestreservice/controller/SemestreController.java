@@ -2,6 +2,7 @@ package com.example.semestreservice.controller;
 
 import com.example.semestreservice.dto.SemestreRequest;
 import com.example.semestreservice.dto.SemestreResponse;
+import com.example.semestreservice.model.ProgramaDTO;
 import com.example.semestreservice.service.IProgramaClient;
 import com.example.semestreservice.service.SemestreService;
 import jakarta.validation.Valid;
@@ -10,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.semestreservice.exception.ResourceNotFoundException;
-
+import feign.FeignException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +45,6 @@ public class SemestreController {
     public ResponseEntity<Map<String, Object>> crearSemestre(
             @Valid @RequestBody SemestreRequest request) {
 
-        // Validar existencia del programa
         validarExistenciaPrograma(request.programaId());
 
         SemestreResponse creado = semestreService.crearSemestre(request);
@@ -68,7 +68,6 @@ public class SemestreController {
             @PathVariable Long id,
             @Valid @RequestBody SemestreRequest request) {
 
-        // Validar existencia del programa
         validarExistenciaPrograma(request.programaId());
 
         SemestreResponse updated = semestreService.actualizarSemestre(id, request);
@@ -87,10 +86,15 @@ public class SemestreController {
     }
 
     private void validarExistenciaPrograma(Long programaId) {
-        // Utilizando el IProgramaClient existente sin modificar sus métodos
-        Boolean existe = programaClient.existePrograma(programaId);
-        if (existe == null || !existe) {
+        try {
+            ProgramaDTO programa = programaClient.obtenerProgramaPorId(programaId);
+            if (programa == null) {
+                throw new ResourceNotFoundException("Programa con ID " + programaId + " no encontrado");
+            }
+        } catch (FeignException.NotFound e) {
             throw new ResourceNotFoundException("Programa con ID " + programaId + " no encontrado");
+        } catch (FeignException e) {
+            throw new ResourceNotFoundException("No existe un programa con este ID " + programaId);
         }
     }
 }

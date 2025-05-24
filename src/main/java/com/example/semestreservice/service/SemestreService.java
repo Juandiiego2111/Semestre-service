@@ -90,8 +90,7 @@ public class SemestreService {
                 semestre.getFechaInicio(),
                 semestre.getFechaFin(),
                 semestre.isActivo(),
-                semestre.getProgramaId(),
-                obtenerNombrePrograma(semestre.getProgramaId())
+                semestre.getProgramaId()
         );
     }
 
@@ -122,21 +121,11 @@ public class SemestreService {
 
     private void validarPrograma(Long programaId) {
         try {
-            if (!programaClient.existePrograma(programaId)) {
-                throw new IllegalArgumentException("No se encontró el programa con id: " + programaId);
-            }
+            programaClient.obtenerProgramaPorId(programaId);
+        } catch (FeignException.NotFound e) {
+            throw new IllegalArgumentException("No se encontró el programa con id: " + programaId);
         } catch (FeignException e) {
             throw new RuntimeException("No se pudo verificar el programa porque falló la comunicación con el programa-service.");
-        }
-    }
-
-    private String obtenerNombrePrograma(Long programaId) {
-        try {
-            return programaClient.obtenerProgramaPorId(programaId).getNombre();
-        } catch (FeignException.NotFound e) {
-            return "Programa no encontrado";
-        } catch (FeignException e) {
-            return "Error al obtener nombre del programa";
         }
     }
 }

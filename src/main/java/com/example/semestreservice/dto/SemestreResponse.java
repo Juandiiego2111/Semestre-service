@@ -8,6 +8,5 @@ public record SemestreResponse(
         LocalDate fechaInicio,
         LocalDate fechaFin,
         boolean activo,
-        Long programaId,
-        String nombrePrograma
+        Long programaId
 ) {}

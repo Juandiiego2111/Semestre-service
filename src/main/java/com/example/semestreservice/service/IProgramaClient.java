@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "programa-service")
 public interface IProgramaClient {
 
-    @GetMapping("/programas/{id}/existe")
-    Boolean existePrograma(@PathVariable Long id);
 
     @GetMapping("/programas/{id}")
     ProgramaDTO obtenerProgramaPorId(@PathVariable Long id);
