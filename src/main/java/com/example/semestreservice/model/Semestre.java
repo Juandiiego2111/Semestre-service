@@ -28,4 +28,6 @@ public class Semestre {
 
     @Column(nullable = false)
     private boolean activo;
+
+    private Long programaId;
 }

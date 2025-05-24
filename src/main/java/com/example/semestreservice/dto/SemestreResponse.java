@@ -7,5 +7,7 @@ public record SemestreResponse(
         String nombre,
         LocalDate fechaInicio,
         LocalDate fechaFin,
-        boolean activo
+        boolean activo,
+        Long programaId,
+        String nombrePrograma
 ) {}

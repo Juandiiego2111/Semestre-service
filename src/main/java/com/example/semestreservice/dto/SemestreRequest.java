@@ -16,5 +16,9 @@ public record SemestreRequest(
         @Future(message = "La fecha de fin debe ser futura")
         LocalDate fechaFin,
 
-        boolean activo
+        @NotNull(message = "El campo activo es obligatorio")
+        Boolean activo,
+
+        @NotNull(message = "El programaId es obligatorio")
+        Long programaId
 ) {}
