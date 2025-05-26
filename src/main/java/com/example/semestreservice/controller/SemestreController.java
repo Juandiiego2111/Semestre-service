@@ -29,38 +29,44 @@ public class SemestreController {
     public ResponseEntity<Map<String, Object>> listarSemestres() {
         List<SemestreResponse> lista = semestreService.listarSemestres();
         Map<String, Object> resp = new HashMap<>();
-        resp.put("message", "Semestres obtenidos exitosamente");
+        resp.put("message", "Lista de semestres obtenida correctamente");
         resp.put("semestres", lista);
         return ResponseEntity.ok(resp);
-    }
-
-    @GetMapping("/semestre/page/{page}")
-    public ResponseEntity<Map<String, Object>> listarSemestresPaginados(@PathVariable int page) {
-        Map<String, Object> pageData = semestreService.listarSemestresPaginados(page);
-        pageData.put("message", "Semestres paginados obtenidos exitosamente");
-        return ResponseEntity.ok(pageData);
     }
 
     @PostMapping("/semestres")
     public ResponseEntity<Map<String, Object>> crearSemestre(
             @Valid @RequestBody SemestreRequest request) {
 
-        validarExistenciaPrograma(request.programaId());
+        if (request.programaId() != null) {
+            try {
+                programaClient.obtenerProgramaPorId(request.programaId());
+            } catch (FeignException e) {
+                if (e.status() == HttpStatus.NOT_FOUND.value()) {
+                    throw new ResourceNotFoundException("El programa con este ID no existe");
+                }
+                throw new RuntimeException("Error al validar el programa");
+            }
+        }
 
         SemestreResponse creado = semestreService.crearSemestre(request);
         Map<String, Object> resp = new HashMap<>();
-        resp.put("message", "Semestre creado exitosamente");
+        resp.put("message", "Semestre creado correctamente");
         resp.put("semestre", creado);
         return new ResponseEntity<>(resp, HttpStatus.CREATED);
     }
 
     @GetMapping("/semestres/{id}")
     public ResponseEntity<Map<String, Object>> obtenerSemestre(@PathVariable Long id) {
-        SemestreResponse dto = semestreService.obtenerSemestre(id);
-        Map<String, Object> resp = new HashMap<>();
-        resp.put("message", "Semestre obtenido exitosamente");
-        resp.put("semestre", dto);
-        return ResponseEntity.ok(resp);
+        try {
+            SemestreResponse dto = semestreService.obtenerSemestre(id);
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("message", "Semestre obtenido correctamente");
+            resp.put("semestre", dto);
+            return ResponseEntity.ok(resp);
+        } catch (ResourceNotFoundException e) {
+            throw new ResourceNotFoundException("El semestre con este ID no existe");
+        }
     }
 
     @PutMapping("/semestres/{id}")
@@ -68,33 +74,37 @@ public class SemestreController {
             @PathVariable Long id,
             @Valid @RequestBody SemestreRequest request) {
 
-        validarExistenciaPrograma(request.programaId());
+        if (request.programaId() != null) {
+            try {
+                programaClient.obtenerProgramaPorId(request.programaId());
+            } catch (FeignException e) {
+                if (e.status() == HttpStatus.NOT_FOUND.value()) {
+                    throw new ResourceNotFoundException("El programa con este ID no existe");
+                }
+                throw new RuntimeException("Error al validar el programa");
+            }
+        }
 
-        SemestreResponse updated = semestreService.actualizarSemestre(id, request);
-        Map<String, Object> resp = new HashMap<>();
-        resp.put("message", "Semestre actualizado exitosamente");
-        resp.put("semestre", updated);
-        return ResponseEntity.ok(resp);
+        try {
+            SemestreResponse updated = semestreService.actualizarSemestre(id, request);
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("message", "Semestre actualizado correctamente");
+            resp.put("semestre", updated);
+            return ResponseEntity.ok(resp);
+        } catch (ResourceNotFoundException e) {
+            throw new ResourceNotFoundException("El semestre con este ID no existe");
+        }
     }
 
     @DeleteMapping("/semestres/{id}")
     public ResponseEntity<Map<String, Object>> eliminarSemestre(@PathVariable Long id) {
-        semestreService.eliminarSemestre(id);
-        Map<String, Object> resp = new HashMap<>();
-        resp.put("message", "Semestre eliminado exitosamente");
-        return ResponseEntity.ok(resp);
-    }
-
-    private void validarExistenciaPrograma(Long programaId) {
         try {
-            ProgramaDTO programa = programaClient.obtenerProgramaPorId(programaId);
-            if (programa == null) {
-                throw new ResourceNotFoundException("Programa con ID " + programaId + " no encontrado");
-            }
-        } catch (FeignException.NotFound e) {
-            throw new ResourceNotFoundException("Programa con ID " + programaId + " no encontrado");
-        } catch (FeignException e) {
-            throw new ResourceNotFoundException("No existe un programa con este ID " + programaId);
+            semestreService.eliminarSemestre(id);
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("message", "Semestre eliminado correctamente");
+            return ResponseEntity.ok(resp);
+        } catch (ResourceNotFoundException e) {
+            throw new ResourceNotFoundException("El semestre con este ID no existe");
         }
     }
 }

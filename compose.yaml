@@ -1,36 +1,32 @@
+version: '3.8'
+
 services:
-  producto-service:
+  semestre-service:
     image: juandiiego2111/semestreservice:latest
-    container_name: semestreservice
+    container_name: semestre-service
     restart: unless-stopped
     depends_on:
-      - db
+      - db3
     ports:
       - "8080:8080"
-      - "8081:8081"
+      - "8082:8082"
     environment:
       - DB_USER=postgres
       - DB_PASS=juandiego21
-      - JPA_DDL=create-drop
-      - DB_HOST=jdbc:postgresql://db:5432/semestredb
-
+      - JPA_DDL=update
+      - DB_HOST=jdbc:postgresql://localhost:5432/semestresdb
     networks:
       - mynetwork
 
-  db:
+  db3:
     image: postgres:latest
-    container_name: db
+    container_name: db3
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "5435:5432"
     environment:
-      POSTGRES_DB: semestredb
+      POSTGRES_DB: semestresdb
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: juandiego21
-    volumes:
-      - ./data:/var/lib/postgresql/data
-    networks:
-      - mynetwork
 
 networks:
   mynetwork:

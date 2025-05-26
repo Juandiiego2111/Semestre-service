@@ -6,35 +6,36 @@ management:
   server:
     port: '8083'
 
-
 spring:
   main:
-    allow-circular-references: 'true'
+    allow-circular-references: true
 
   datasource:
     hikari:
-      validation-timeout: '5000'
-      idle-timeout: '600000'
-      maximum-pool-size: '50'
-      connection-timeout: '30000'
-      keepalive-time: '300000'
-      max-lifetime: '1800000'
+      validation-timeout: 5000
+      idle-timeout: 600000
+      maximum-pool-size: 50
+      connection-timeout: 30000
+      keepalive-time: 300000
+      max-lifetime: 1800000
       connection-test-query: SELECT 1
-      minimum-idle: '10'
+      minimum-idle: 10
     driver-class-name: org.postgresql.Driver
-    password: ${DB_PASS:juandiego21}
-    username: ${DB_USER:postgres}
-    url: ${DB_HOST:jdbc:postgresql://localhost:5432/semestresdb}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/semestresdb}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:juandiego21}
 
   jpa:
     hibernate:
-      ddl-auto: ${JPA_DDL:create-drop}
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:create-drop}
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: 'true'
+
   application:
     name: semestreservice
+
 logging:
   level:
     org:
@@ -53,7 +54,7 @@ app:
   version: 0.14.0
 
 server:
-  port: '8082'
+  port: '8081'
 
 programa-service:
   url: http://localhost:8080

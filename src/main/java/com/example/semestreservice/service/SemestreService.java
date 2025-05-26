@@ -81,7 +81,6 @@ public class SemestreService {
         return response;
     }
 
-    // ---- Métodos auxiliares ----
 
     private SemestreResponse mapToResponse(Semestre semestre) {
         return new SemestreResponse(
@@ -105,12 +104,14 @@ public class SemestreService {
         semestre.setFechaInicio(request.fechaInicio());
         semestre.setFechaFin(request.fechaFin());
         semestre.setActivo(request.activo());
-        semestre.setProgramaId(request.programaId());
+        semestre.setProgramaId(request.programaId()); // Puede ser null
     }
 
     private void validarDatosSemestre(SemestreRequest request) {
         validarFechas(request);
-        validarPrograma(request.programaId());
+        if (request.programaId() != null) {
+            validarPrograma(request.programaId());
+        }
     }
 
     private void validarFechas(SemestreRequest request) {
@@ -120,12 +121,16 @@ public class SemestreService {
     }
 
     private void validarPrograma(Long programaId) {
+        if (programaId == null) {
+            return;
+        }
+
         try {
-            programaClient.obtenerProgramaPorId(programaId);
-        } catch (FeignException.NotFound e) {
-            throw new IllegalArgumentException("No se encontró el programa con id: " + programaId);
-        } catch (FeignException e) {
-            throw new RuntimeException("No se pudo verificar el programa porque falló la comunicación con el programa-service.");
+            if (!programaClient.obtenerProgramaPorId(programaId).hasBody()) {
+                throw new IllegalArgumentException("No se encontró el programa con id: " + programaId);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error al validar el programa: " + e.getMessage());
         }
     }
 }

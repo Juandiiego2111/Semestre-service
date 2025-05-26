@@ -19,6 +19,5 @@ public record SemestreRequest(
         @NotNull(message = "El campo activo es obligatorio")
         Boolean activo,
 
-        @NotNull(message = "El programaId es obligatorio")
         Long programaId
 ) {}
