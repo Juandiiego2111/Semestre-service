@@ -1,24 +1,21 @@
-package com.example.semestreservice.model;
+package com.example.semestreservice.domain.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
+@Getter
+@Setter
 @Table(name = "semestres")
 public class Semestre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String nombre;
+    @Column(nullable = false)
+    private Long numeroSemestre;
 
     @Column(nullable = false)
     private LocalDate fechaInicio;
@@ -29,5 +26,6 @@ public class Semestre {
     @Column(nullable = false)
     private boolean activo;
 
-    private Long programaId;
+    @Column(nullable = false)
+    private Long idPrograma;
 }

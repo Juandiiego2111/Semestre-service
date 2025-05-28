@@ -1,4 +1,4 @@
-package com.example.semestreservice.model;
+package com.example.semestreservice.domain.model;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;

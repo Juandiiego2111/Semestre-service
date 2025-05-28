@@ -1,4 +1,4 @@
-package com.example.semestreservice.exception;
+package com.example.semestreservice.delivery.exception;
 
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataAccessException;

@@ -4,7 +4,7 @@ management:
       exposure:
         include: '*'
   server:
-    port: '8083'
+    port: ${ACTUATOR_PORT:8083}
 
 spring:
   main:
@@ -12,36 +12,37 @@ spring:
 
   datasource:
     hikari:
-      validation-timeout: 5000
-      idle-timeout: 600000
-      maximum-pool-size: 50
-      connection-timeout: 30000
-      keepalive-time: 300000
-      max-lifetime: 1800000
+      validation-timeout: '5000'
+      idle-timeout: '600000'
+      maximum-pool-size: '50'
+      connection-timeout: '30000'
+      keepalive-time: '300000'
+      max-lifetime: '1800000'
       connection-test-query: SELECT 1
-      minimum-idle: 10
+      minimum-idle: '10'
     driver-class-name: org.postgresql.Driver
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/semestresdb}
-    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:juandiego21}
+    url: ${DB_HOST:jdbc:postgresql://localhost:5432/semestresdb}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:juandiego21}
 
   jpa:
     hibernate:
-      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:create-drop}
+      ddl-auto: ${JPA_DDL:create-drop}
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: 'true'
+    show-sql: true
 
   application:
-    name: semestreservice
+    name: semestre-service
 
 logging:
   level:
     org:
       hibernate:
         SQL: DEBUG
-      springframework: ERROR
+        nodeValue: ERROR
+        springframework: ERROR
     root: ERROR
     web: INFO
     com:
@@ -54,7 +55,7 @@ app:
   version: 0.14.0
 
 server:
-  port: '8081'
+  port: ${PORT:8082}
 
 programa-service:
   url: http://localhost:8080
@@ -62,7 +63,7 @@ programa-service:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
     register-with-eureka: true
     fetch-registry: true
     lease-renewal-interval-in-seconds: 10
