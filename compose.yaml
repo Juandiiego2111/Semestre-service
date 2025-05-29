@@ -6,8 +6,8 @@ services:
     depends_on:
       - db
     ports:
-      - "8081:8081"  # API principal
-      - "8082:8082"  # Actuator
+      - "8082:8082"  # API principal
+      - "8083:8083"  # Actuator
     environment:
       DB_USER: postgres
       DB_PASS: juandiego21
@@ -15,8 +15,8 @@ services:
       DB_HOST: jdbc:postgresql://db:5432/semestresdb
       EUREKA_HOST: eurekaserver
       EUREKA_PORT: 8761
-      PORT: 8081
-      ACTUATOR_PORT: 8082
+      PORT: 8082
+      ACTUATOR_PORT: 8083
     networks:
       - mynetwork
 
