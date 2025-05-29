@@ -40,7 +40,7 @@ public class SemestreRestController {
         this.semestreService = semestreService;
         this.programaClient = programaClient;
     }
-//Listar los semestres
+    //Listar los semestres
     @GetMapping("/semestres")
     public ResponseEntity<Map<String, Object>> listarSemestres() {
         List<Semestre> lista = semestreService.findAll();
@@ -51,7 +51,7 @@ public class SemestreRestController {
         response.put(SEMESTRES, lista);
         return ResponseEntity.ok(response);
     }
-//  Listar semestres por paginas
+    //  Listar semestres por paginas
     @GetMapping("/semestres/page/{page}")
     public ResponseEntity<Object> index(@PathVariable Integer page) {
         Pageable pageable = PageRequest.of(page, 4);
@@ -61,7 +61,7 @@ public class SemestreRestController {
         }
         return ResponseEntity.ok(semestres);
     }
-//Crear semestres
+    //Crear semestres
     @PostMapping("/semestres")
     public ResponseEntity<Map<String, Object>> crearSemestre(@Valid @RequestBody Semestre semestre, BindingResult result) {
         if(result.hasErrors()) {
@@ -74,7 +74,7 @@ public class SemestreRestController {
         response.put(SEMESTRE, nuevoSemestre);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-//Eliminar semestres
+    //Eliminar semestres
     @DeleteMapping("/semestres")
     public ResponseEntity<Map<String, Object>> delete(@RequestBody Semestre semestre) {
         semestreService.findById(semestre.getId())
@@ -85,7 +85,7 @@ public class SemestreRestController {
         response.put(SEMESTRE, null);
         return ResponseEntity.ok(response);
     }
-//Actualizar semestre
+    //Actualizar semestre
     @PutMapping("/semestres")
     public ResponseEntity<Map<String, Object>> update(@Valid @RequestBody Semestre semestre, BindingResult result) {
         if (result.hasErrors()) {
@@ -100,7 +100,7 @@ public class SemestreRestController {
         response.put(SEMESTRE, semestreActualizado);
         return ResponseEntity.ok(response);
     }
-//Buscar semestre por id
+    //Buscar semestre por id
     @GetMapping("/semestres/{id}")
     public ResponseEntity<Map<String, Object>> obtenerSemestre(@PathVariable Long id) {
         Semestre semestre = semestreService.findById(id)
@@ -110,7 +110,7 @@ public class SemestreRestController {
         response.put(SEMESTRE, semestre);
         return ResponseEntity.ok(response);
     }
-//Verificar si el programa existe
+    //Verificar si el programa existe
     public void comprobarPrograma(Long idPrograma) {
         Map<String, List<ProgramaDTO>> response = programaClient.idprogramas();
         List<ProgramaDTO> programas = response.get("programas");

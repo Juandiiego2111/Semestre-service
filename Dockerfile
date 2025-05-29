@@ -1,4 +1,4 @@
-FROM openjdk:21
+FROM openjdk:23
 LABEL authors="juandiiego2111"
 WORKDIR /app
 COPY target/semestreservice-0.0.1-SNAPSHOT.jar /app
